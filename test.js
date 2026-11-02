@@ -163,6 +163,19 @@ test('should serialize the cause property', t => {
 	t.false(serialized.cause instanceof Error);
 	t.false(serialized.cause.cause instanceof Error);
 });
+test('should preserve explicitly null cause', t => {
+	const error = new Error('outer error', {cause: null});
+
+	const serialized = serializeError(error);
+
+	t.true(Object.hasOwn(serialized, 'cause'));
+	t.is(serialized.cause, null);
+
+	const deserialized = deserializeError(serialized);
+
+	t.true(Object.hasOwn(deserialized, 'cause'));
+	t.is(deserialized.cause, null);
+});
 
 test('should handle circular cause property', t => {
 	const error = new Error('test');

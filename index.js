@@ -144,7 +144,7 @@ const destroyCircular = ({
 	if (serialize || to instanceof Error) {
 		for (const {property, enumerable} of errorProperties) {
 			const value = from[property];
-			if (value === undefined || value === null) {
+			if (value === undefined || (value === null && property !== 'cause')) {
 				continue;
 			}
 
@@ -154,7 +154,7 @@ const destroyCircular = ({
 			}
 
 			let processedValue = value;
-			if (typeof value === 'object') {
+			if (value !== null && typeof value === 'object') {
 				processedValue = seen.has(value)
 					? '[Circular]'
 					: continueDestroyCircular(value);
